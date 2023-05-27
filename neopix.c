@@ -1,4 +1,4 @@
-#include<stdio.h>
+#include <stdio.h>
 #include "pico/stdlib.h"
 
 #include "FreeRTOS.h"
@@ -7,18 +7,24 @@
 
 void vBlinkTask()
 {
-
     vTaskDelay(1000);
-    for (;;)
+    while (true)
     {
         gpio_put(PICO_DEFAULT_LED_PIN, 1);
         vTaskDelay(250);
         gpio_put(PICO_DEFAULT_LED_PIN, 0);
         vTaskDelay(250);
-        sleep_ms(10);
     }
 }
 
+void vBlinkTask2()
+{
+    while (true)
+    {
+        printf("Current TASK2 custom count %d\n", getTaskCustomCount());
+        vTaskDelay(500);
+    }
+}
 void main()
 {
     stdio_init_all();
@@ -27,6 +33,7 @@ void main()
     gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
 
     xTaskCreate(vBlinkTask, "Blink Task", 128, NULL, 1, NULL);
+    xTaskCreate(vBlinkTask2, "Blink Task 2", 128, NULL, 1, NULL);
 
     vTaskStartScheduler();
 }
